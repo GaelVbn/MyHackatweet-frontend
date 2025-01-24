@@ -88,7 +88,7 @@
   align-items: center;
   width: 40%;
   height: 70%;
-  color: #161f2c;
+  color: white;
   border-radius: 20px;
   background-color: #161f2c;
 }
@@ -138,6 +138,7 @@
   border: 1px solid white;
   background-color: transparent;
   font-weight: 600;
+  color: white;
 }
 
 .signupform > button {

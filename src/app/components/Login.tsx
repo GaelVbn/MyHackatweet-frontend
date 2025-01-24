@@ -1,12 +1,41 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/login.module.css";
 import Image from "next/image";
-import { Bacasime_Antique } from "next/font/google";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-const Login = () => {
+export const Login = () => {
   const [modalSignup, setModalSignup] = useState(false);
   const [modalSignin, setModalSignin] = useState(false);
+  const [eye, setEye] = useState(false);
+
+  const [formSignup, setFormSignup] = useState({
+    firstname: "",
+    username: "",
+    password: "",
+  });
+
+  const [formSignin, setFormSignin] = useState({
+    username: "",
+    password: "",
+  });
+
+  useEffect(() => {
+    if (modalSignup || modalSignin) {
+      setFormSignup({
+        firstname: "",
+        username: "",
+        password: "",
+      });
+      setFormSignin({
+        username: "",
+        password: "",
+      });
+
+      setEye(false);
+    }
+  }, [modalSignup, modalSignin]);
+
   return (
     <div className={`${styles.container}`}>
       {/* background*/}
@@ -60,17 +89,47 @@ const Login = () => {
                 className={styles.input}
                 type="text"
                 placeholder="Firstname"
+                value={formSignup.firstname}
+                onChange={(e) =>
+                  setFormSignup({ ...formSignup, firstname: e.target.value })
+                }
               />
               <input
                 className={styles.input}
                 type="text"
                 placeholder="Username"
+                value={formSignup.username}
+                onChange={(e) =>
+                  setFormSignup({ ...formSignup, username: e.target.value })
+                }
               />
+
               <input
                 className={styles.input}
-                type="password"
+                type={eye ? "text" : "password"}
                 placeholder="password"
+                value={formSignup.password}
+                onChange={(e) =>
+                  setFormSignup({ ...formSignup, password: e.target.value })
+                }
               />
+
+              {eye ? (
+                <FaEye
+                  style={{
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setEye(!eye)}
+                />
+              ) : (
+                <FaEyeSlash
+                  style={{
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setEye(!eye)}
+                />
+              )}
+
               <button>Sign up</button>
             </div>
           </div>
@@ -96,12 +155,35 @@ const Login = () => {
                 className={styles.input}
                 type="text"
                 placeholder="Username"
+                value={formSignin.username}
+                onChange={(e) =>
+                  setFormSignin({ ...formSignin, username: e.target.value })
+                }
               />
               <input
                 className={styles.input}
                 type="password"
                 placeholder="password"
+                value={formSignin.password}
+                onChange={(e) =>
+                  setFormSignin({ ...formSignin, password: e.target.value })
+                }
               />
+              {eye ? (
+                <FaEye
+                  style={{
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setEye(!eye)}
+                />
+              ) : (
+                <FaEyeSlash
+                  style={{
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setEye(!eye)}
+                />
+              )}
               <button>Sign in</button>
             </div>
           </div>

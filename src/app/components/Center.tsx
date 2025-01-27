@@ -13,7 +13,6 @@ const Center = () => {
   const dispatch = useDispatch();
   const tweets = useSelector((state: any) => state.tweet.value);
   const user = useSelector((state: any) => state.user);
-  console.log("User state in Center:", user);
 
   const handleDelete = (id: number) => {
     fetch(`${urlProd}/tweets`, {

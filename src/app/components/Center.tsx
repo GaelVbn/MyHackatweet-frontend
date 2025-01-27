@@ -86,7 +86,7 @@ const Center = () => {
 
             <p style={{ fontWeight: "bold" }}>{tweet.author.username}</p>
             <p style={{ color: "gray", fontSize: "15px" }}>
-              @{tweet.author.username}
+              @{tweet.author?.username}
             </p>
             <span style={{ color: "gray", fontSize: "12px" }}>·</span>
             <p style={{ color: "gray", fontSize: "12px" }}>
@@ -113,7 +113,7 @@ const Center = () => {
             {tweet.likes.length}
           </span>
           <span>
-            {tweet.author.username === user.username && (
+            {tweet.author?.username === user.username && (
               <FaRegTrashCan
                 className={styles.trash}
                 onClick={() => handleDelete(tweet._id)}

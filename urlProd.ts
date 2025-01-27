@@ -1,1 +1,1 @@
-export const urlProd = "http://localhost:3001";
+export const urlProd = "https://my-hackatweet-backend.vercel.app";

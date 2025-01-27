@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import styles from "../styles/center.module.css";
 import Image from "next/image";
 import { IoMdHeart } from "react-icons/io";
@@ -104,7 +104,7 @@ const Center = () => {
               onClick={() => handleLike(tweet._id)}
               style={{
                 color: tweet.likes.some(
-                  (e: any) => e.username === user.username
+                  (e: any) => user && e.username === user.username
                 )
                   ? "red"
                   : "white",

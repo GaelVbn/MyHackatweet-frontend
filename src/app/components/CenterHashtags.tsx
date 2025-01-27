@@ -14,13 +14,12 @@ const CenterHashtags = () => {
   const dispatch = useDispatch();
   const tweets = useSelector((state: any) => state.tweet.value);
   const user = useSelector((state: any) => state.user);
-  const [hashtagTweets, setHashtagTweets] = useState([]);
 
   const params = useParams();
-  const hashtag = params.hashtag;
+  const hashtag = params?.hashtag;
 
   useEffect(() => {
-    if (!hashtag) return;
+    if (!hashtag || !user.token) return;
     fetch(`${urlProd}/tweets/hashtag/${user.token}/${hashtag}`)
       .then((res) => res.json())
       .then((data) => {
@@ -28,7 +27,7 @@ const CenterHashtags = () => {
           dispatch(setTweets(data.tweets));
         }
       });
-  }, [hashtag]);
+  }, [hashtag, user.token]);
 
   const handleDelete = (id: number) => {
     fetch(`${urlProd}/tweets`, {
@@ -70,26 +69,28 @@ const CenterHashtags = () => {
   };
 
   const listTweets = tweets.map((tweet: any, index: number) => {
-    const formattedContent = tweet.content.split(" ").map((word: string) => {
-      if (word.startsWith("#")) {
-        return (
-          <a
-            href={`/hashtagsPage/${word.slice(1)}`}
-            key={index}
-            style={{
-              fontWeight: "bold",
-              color: "#0a6cc1",
-              textDecoration: "none",
-            }}
-          >
-            {word}
-          </a>
-        );
-      }
-      return word + " ";
-    });
+    const formattedContent = tweet.content
+      .split(" ")
+      .map((word: string, idx: number) => {
+        if (word.startsWith("#")) {
+          return (
+            <a
+              href={`/hashtagsPage/${word.slice(1)}`}
+              key={`${index}-${idx}`}
+              style={{
+                fontWeight: "bold",
+                color: "#0a6cc1",
+                textDecoration: "none",
+              }}
+            >
+              {word}
+            </a>
+          );
+        }
+        return word + " ";
+      });
     return (
-      <div className={styles.container} key={index}>
+      <div className={styles.container} key={tweet._id}>
         <div className={styles.tweetcontainer}>
           <div className={styles.profile}>
             <Image
@@ -100,7 +101,7 @@ const CenterHashtags = () => {
               style={{ borderRadius: "30%", marginLeft: "1rem" }}
             />
 
-            <p style={{ fontWeight: "bold" }}>{tweet.author.username}</p>
+            <p style={{ fontWeight: "bold" }}>{tweet.author?.username}</p>
             <p style={{ color: "gray", fontSize: "15px" }}>
               @{tweet.author?.username}
             </p>
@@ -120,7 +121,7 @@ const CenterHashtags = () => {
               onClick={() => handleLike(tweet._id)}
               style={{
                 color: tweet.likes.some(
-                  (e: any) => e.username === user.username
+                  (e: any) => user && e.username === user.username
                 )
                   ? "red"
                   : "white",

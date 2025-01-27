@@ -13,6 +13,7 @@ const Center = () => {
   const dispatch = useDispatch();
   const tweets = useSelector((state: any) => state.tweet.value);
   const user = useSelector((state: any) => state.user);
+  console.log("User state in Center:", user);
 
   const handleDelete = (id: number) => {
     fetch(`${urlProd}/tweets`, {
@@ -104,7 +105,7 @@ const Center = () => {
               onClick={() => handleLike(tweet._id)}
               style={{
                 color: tweet.likes.some(
-                  (e: any) => user && e.username === user.username
+                  (e: any) => user && e.username === user?.username
                 )
                   ? "red"
                   : "white",

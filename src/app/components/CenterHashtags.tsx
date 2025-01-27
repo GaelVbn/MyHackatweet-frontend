@@ -121,7 +121,7 @@ const CenterHashtags = () => {
               onClick={() => handleLike(tweet._id)}
               style={{
                 color: tweet.likes.some(
-                  (e: any) => user && e.username === user.username
+                  (e: any) => user && e.username === user?.username
                 )
                   ? "red"
                   : "white",

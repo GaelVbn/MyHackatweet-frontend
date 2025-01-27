@@ -3,22 +3,104 @@ import React, { useEffect, useState } from "react";
 import styles from "../styles/login.module.css";
 import Image from "next/image";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FormSignup } from "../types/login";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../features/user";
+import { useRouter } from "next/navigation";
+import { urlProd } from "../../../urlProd";
 
 export const Login = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
   const [modalSignup, setModalSignup] = useState(false);
   const [modalSignin, setModalSignin] = useState(false);
   const [eye, setEye] = useState(false);
 
-  const [formSignup, setFormSignup] = useState({
+  const [formSignup, setFormSignup] = useState<FormSignup>({
     firstname: "",
     username: "",
     password: "",
   });
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { firstname, username, password } = formSignup;
+
+    try {
+      const res = await fetch(`${urlProd}/users/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firstname, username, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.status === 422 || res.status === 400) {
+        alert(data.error);
+        return;
+      }
+
+      if (data) {
+        dispatch(
+          setUser({
+            firstname: data.firstname,
+            username: data.username,
+            token: data.token,
+          })
+        );
+        router.push("/homePage");
+      }
+    } catch (error) {
+      console.error("Error during signup:", error);
+    }
+  };
 
   const [formSignin, setFormSignin] = useState({
     username: "",
     password: "",
   });
+
+  const handleSignin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { username, password } = formSignin;
+
+    if (!username || !password) {
+      console.error("All fields are required");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${urlProd}/users/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.status === 422 || res.status === 404) {
+        console.error(data.error);
+        alert(data.error);
+        return;
+      }
+
+      if (data) {
+        dispatch(
+          setUser({
+            firstname: data.firstname,
+            username: data.username,
+            token: data.token,
+          })
+        );
+        router.push("/homePage");
+      }
+    } catch (error) {
+      console.error("Error during signin:", error);
+    }
+  };
 
   useEffect(() => {
     if (modalSignup || modalSignin) {
@@ -44,7 +126,7 @@ export const Login = () => {
           modalSignup || modalSignin ? styles.dimmed : ""
         }`}
       >
-        <Image src={"/logo.png"} alt="" width={300} height={300} />
+        <Image src={"/logo.png"} alt="" width={300} height={300} priority />
       </div>
 
       {/* login side*/}
@@ -84,12 +166,13 @@ export const Login = () => {
             </div>
             <Image src={"/logo.png"} alt="" width={100} height={100} />
             <h2>Create your Hackatweet account</h2>
-            <div className={styles.signupform}>
+            <form className={styles.signupform}>
               <input
                 className={styles.input}
                 type="text"
                 placeholder="Firstname"
                 value={formSignup.firstname}
+                required
                 onChange={(e) =>
                   setFormSignup({ ...formSignup, firstname: e.target.value })
                 }
@@ -99,6 +182,7 @@ export const Login = () => {
                 type="text"
                 placeholder="Username"
                 value={formSignup.username}
+                required
                 onChange={(e) =>
                   setFormSignup({ ...formSignup, username: e.target.value })
                 }
@@ -109,6 +193,7 @@ export const Login = () => {
                 type={eye ? "text" : "password"}
                 placeholder="password"
                 value={formSignup.password}
+                required
                 onChange={(e) =>
                   setFormSignup({ ...formSignup, password: e.target.value })
                 }
@@ -130,8 +215,8 @@ export const Login = () => {
                 />
               )}
 
-              <button>Sign up</button>
-            </div>
+              <button onClick={handleSignup}>Sign up</button>
+            </form>
           </div>
         </div>
       )}
@@ -150,21 +235,25 @@ export const Login = () => {
             </div>
             <Image src={"/logo.png"} alt="" width={100} height={100} />
             <h2>Connect to Hackatweet</h2>
-            <div className={styles.signupform}>
+            <form className={styles.signupform}>
               <input
                 className={styles.input}
                 type="text"
                 placeholder="Username"
+                autoComplete="username"
                 value={formSignin.username}
+                required
                 onChange={(e) =>
                   setFormSignin({ ...formSignin, username: e.target.value })
                 }
               />
               <input
                 className={styles.input}
-                type="password"
+                type={eye ? "text" : "password"}
                 placeholder="password"
+                autoComplete="current-password"
                 value={formSignin.password}
+                required
                 onChange={(e) =>
                   setFormSignin({ ...formSignin, password: e.target.value })
                 }
@@ -184,8 +273,8 @@ export const Login = () => {
                   onClick={() => setEye(!eye)}
                 />
               )}
-              <button>Sign in</button>
-            </div>
+              <button onClick={handleSignin}>Sign in</button>
+            </form>
           </div>
         </div>
       )}

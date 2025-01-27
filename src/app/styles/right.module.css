@@ -22,8 +22,8 @@
   width: 100%;
   height: fit-content;
   margin-top: 1rem;
-  overflow-y: scroll;
-  overscroll-behavior-y: auto;
+  overflow-y: auto;
+  scrollbar-width: none;
   background-color: #1c2633;
   border-radius: 10px;
 }
@@ -35,4 +35,9 @@
   height: fit-content;
   border-radius: 10px;
   padding: 0.75rem;
+  cursor: pointer;
+}
+
+.trends:hover {
+  background-color: #222d3db4;
 }

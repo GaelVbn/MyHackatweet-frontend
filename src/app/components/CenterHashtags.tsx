@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/center.module.css";
 import Image from "next/image";
 import { IoMdHeart } from "react-icons/io";
@@ -7,12 +7,28 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
 import { urlProd } from "../../../urlProd";
-import { deleteTweet, isLiked } from "../features/tweet";
+import { deleteTweet, isLiked, setTweets } from "../features/tweet";
+import { useParams } from "next/navigation";
 
-const Center = () => {
+const CenterHashtags = () => {
   const dispatch = useDispatch();
   const tweets = useSelector((state: any) => state.tweet.value);
   const user = useSelector((state: any) => state.user);
+  const [hashtagTweets, setHashtagTweets] = useState([]);
+
+  const params = useParams();
+  const hashtag = params.hashtag;
+
+  useEffect(() => {
+    if (!hashtag) return;
+    fetch(`${urlProd}/tweets/hashtag/${user.token}/${hashtag}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.result) {
+          dispatch(setTweets(data.tweets));
+        }
+      });
+  }, [hashtag]);
 
   const handleDelete = (id: number) => {
     fetch(`${urlProd}/tweets`, {
@@ -134,4 +150,4 @@ const Center = () => {
   );
 };
 
-export default Center;
+export default CenterHashtags;

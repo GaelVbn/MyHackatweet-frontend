@@ -3,9 +3,14 @@ import React from "react";
 import Image from "next/image";
 import styles from "../styles/left.module.css";
 import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../features/user";
 
 const Left = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
+  const user = useSelector((state: any) => state.user);
+
   return (
     <div className={styles.container}>
       <div className={styles.logo}>
@@ -14,6 +19,7 @@ const Left = () => {
           alt={"logo"}
           width={50}
           height={50}
+          priority
           onClick={() => {
             router.push("/homePage");
           }}
@@ -34,17 +40,19 @@ const Left = () => {
               <p
                 style={{ fontWeight: "bold", margin: 0, paddingBottom: "5px" }}
               >
-                Gael
+                {user.firstname}
               </p>
               <p style={{ color: "gray", fontSize: "15px", margin: 0 }}>
-                @Gaelvbn
+                @{user.username}
               </p>
             </div>
           </div>
         </div>
 
         <div>
-          <button className={styles.logout}>Logout</button>
+          <button className={styles.logout} onClick={() => dispatch(logout())}>
+            Logout
+          </button>
         </div>
       </div>
     </div>

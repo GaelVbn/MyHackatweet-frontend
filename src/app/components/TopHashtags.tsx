@@ -1,9 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import styles from "../styles/topHashtags.module.css";
+import { useRouter } from "next/navigation";
 
 const TopHashtags = () => {
   const [input, setInput] = useState("");
+
+  const router = useRouter();
+
   return (
     <div className={styles.top}>
       <div className={styles.topcontainer}>
@@ -16,8 +20,10 @@ const TopHashtags = () => {
           placeholder="Search #"
           className={styles.input}
           maxLength={280}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => setInput(e.target.value.replace(/#/g, ""))}
+          onKeyUp={(e) =>
+            e.key === "Enter" && router.push(`/hashtagsPage/${input}`)
+          }
         />
       </div>
     </div>

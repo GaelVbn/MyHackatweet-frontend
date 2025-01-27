@@ -6,8 +6,8 @@
   border-left: 1px solid hsl(216, 13%, 63%);
   border-right: 1px solid hsl(216, 13%, 63%);
   background-color: #161f2c;
-  overflow-y: scroll;
-  overscroll-behavior-y: auto;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
 .container {
@@ -25,7 +25,6 @@
   align-items: center;
   width: 90%;
   height: fit-content;
-
   margin-top: 1rem;
   gap: 0.5rem;
 }

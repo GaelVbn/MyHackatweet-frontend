@@ -21,7 +21,7 @@ const Left = () => {
           height={50}
           priority
           onClick={() => {
-            router.push("/homePage");
+            window.location.reload();
           }}
           style={{ cursor: "pointer" }}
         />
